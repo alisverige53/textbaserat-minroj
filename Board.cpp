@@ -153,6 +153,13 @@ bool Board::avslöjaRuta(int rad, int kolumn) {
         return true;  // Trampade på en mina
     }
 
+    // Om rutan har 0 minor runt sig, kör flood-fill
+    if (cell.angränsandeMinor == 0) {
+        floodFill(rad, kolumn);
+    }
+
+
+
     // Ingen mina på den här rutan
     return false;
 }
@@ -183,3 +190,48 @@ bool Board::ärInomGräns(int rad, int kolumn) const {
     return rad >= 0 && rad < rader_ &&
            kolumn >= 0 && kolumn < kolumner_;
 }
+
+
+// Hjälpfunktion för flood-fill: öppnar tomma rutor och sprider sig till grannar
+void Board::floodFill(int rad, int kolumn) {
+    // Gå igenom alla 8 grannar runt rutan
+    for (int dr = -1; dr <= 1; ++dr) {
+        for (int dc = -1; dc <= 1; ++dc) {
+            // Hoppa över rutan själv
+            if (dr == 0 && dc == 0) {
+                 continue;
+            }
+
+            int nr = rad + dr;
+            int nc = kolumn + dc;
+
+            // Ligger grannen inom spelplanen?
+            if (!ärInomGräns(nr, nc)) {
+                continue;
+            }
+
+            Cell& granne = rutor_[nr][nc];
+
+            // Öppna aldrig en mina automatiskt
+            if (granne.harMina) {
+                continue;
+            }
+
+            // Om rutan redan är avslöjad eller markerad, hoppa över
+            if (granne.avslöjad || granne.markerad) {
+                continue;
+            }
+
+            // Avslöja grannen
+            granne.avslöjad = true;
+
+            // Om grannen också har 0 angränsande minor, fortsätt flood-fill därifrån
+            if (granne.angränsandeMinor == 0) {
+                floodFill(nr, nc);
+            }
+        }
+    }
+}
+
+
+

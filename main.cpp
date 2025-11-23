@@ -5,6 +5,7 @@ int main() {
     int rader = 6;
     int kolumner = 6;
     int antalMinor = 6;
+   // int antalMinor = 2;
 
     auto spel = std::make_unique<MinesweeperGame>(rader, kolumner, antalMinor);
 

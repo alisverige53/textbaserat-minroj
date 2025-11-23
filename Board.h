@@ -20,6 +20,9 @@ public:
 
     // Tillfällig funktion: skriver ut brädet (kommer att utvecklas)
     void skrivUtFörSpelare() const;
+    
+    // Flood-fill: används för att auto-avslöja tomma rutor och deras grannar
+    void floodFill(int rad, int kolumn);
 
 private:
     int rader_;
@@ -30,4 +33,6 @@ private:
     void placeraMinorSlumpmässigt();
     void beräknaAngränsandeMinor();
     bool ärInomGräns(int rad, int kolumn) const;
+
+
 };
